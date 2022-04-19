@@ -3,21 +3,25 @@
  * https://reactnavigation.org/docs/getting-started
  *
  */
+
 import { FontAwesome } from '@expo/vector-icons';
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { ColorSchemeName, Pressable } from 'react-native';
 
+
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
 import ModalScreen from '../screens/ModalScreen';
 import NotFoundScreen from '../screens/NotFoundScreen';
-import TabOneScreen from '../screens/TabOneScreen';
+import HomeScreen from '../screens/HomeScreen';
 import TabTwoScreen from '../screens/TabTwoScreen';
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
+import ProfilePicture from '../components/ProfilePicture';
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   return (
@@ -58,38 +62,57 @@ function BottomTabNavigator() {
 
   return (
     <BottomTab.Navigator
-      initialRouteName="TabOne"
+      initialRouteName="Home"
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme].tint,
+        tabBarShowLabel: false,
+        headerTitleAlign: 'center',
       }}>
       <BottomTab.Screen
-        name="TabOne"
-        component={TabOneScreen}
-        options={({ navigation }: RootTabScreenProps<'TabOne'>) => ({
-          title: 'Tab One',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+        name="Home"
+        component={HomeScreen}
+        options={({ navigation }: RootTabScreenProps<'Home'>) => ({
+          title: 'Home',
+          headerRightContainerStyle: {
+            marginRight: 15,
+          },
+          headerLeftContainerStyle: {
+            marginLeft: 15,
+          },
+          tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
+          headerTitle: () => (
+            <Ionicons name={'logo-twitter'}size={23} color={Colors.light.tint}></Ionicons> 
+          ),
           headerRight: () => (
-            <Pressable
-              onPress={() => navigation.navigate('Modal')}
-              style={({ pressed }) => ({
-                opacity: pressed ? 0.5 : 1,
-              })}>
-              <FontAwesome
-                name="info-circle"
-                size={25}
-                color={Colors[colorScheme].text}
-                style={{ marginRight: 15 }}
-              />
-            </Pressable>
+            <MaterialCommunityIcons name={'star-four-points-outline'} size={30} color={Colors.light.tint}></MaterialCommunityIcons>
+          ),
+          headerLeft: () => (
+            <ProfilePicture size={30} image={'https://pict-a.sindonews.net/dyn/850/pena/news/2021/08/25/700/521426/17-cara-jitu-menghadapi-cowok-cuek-seperti-dalam-drama-korea-tiu.jpg'}/>
           ),
         })}
       />
       <BottomTab.Screen
-        name="TabTwo"
+        name="Search"
         component={TabTwoScreen}
         options={{
-          title: 'Tab Two',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          title: 'Search',
+          tabBarIcon: ({ color }) => <TabBarIcon name="search" color={color} />,
+        }}
+      />
+            <BottomTab.Screen
+        name="Notifications"
+        component={TabTwoScreen}
+        options={{
+          title: 'Notifications',
+          tabBarIcon: ({ color }) => <TabBarIcon name="bell" color={color} />,
+        }}
+      />
+            <BottomTab.Screen
+        name="Messages"
+        component={TabTwoScreen}
+        options={{
+          title: 'Messages',
+          tabBarIcon: ({ color }) => <TabBarIcon name="envelope" color={color} />,
         }}
       />
     </BottomTab.Navigator>
@@ -103,5 +126,5 @@ function TabBarIcon(props: {
   name: React.ComponentProps<typeof FontAwesome>['name'];
   color: string;
 }) {
-  return <FontAwesome size={30} style={{ marginBottom: -3 }} {...props} />;
+  return <FontAwesome size={23} style={{ marginBottom: -3 }} {...props} />;
 }
